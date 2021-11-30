@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>CKB脚本编程简介[3]: 自定义代币 | Orange&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Bitcoin,Nervos,">
+  
+
+  <meta name="description" content="CKB的 Cell 模型和VM支持许多新的用例。然而，这并不意味着我们需要抛弃现有的。如今区块链中的一个常见用途是令牌发行者发布具有特殊目的/意义的新令牌。在以太坊中，我们称之为ERC20令牌，让我们看看我们如何在CKB中构建类似的概念。为了与ERC20区分，在CKB中的令牌我们称之为 user defined token , 简称UDT。 本文使用CKB v0.20.0版本来演示，具体来说，我在">
+<meta name="keywords" content="Bitcoin,Nervos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CKB脚本编程简介[3]: 自定义代币">
+<meta property="og:url" content="http://orangem.io/2019/09/09/CKB脚本编程简介-3-自定义代币/index.html">
+<meta property="og:site_name" content="Orange&#39;s Blog">
+<meta property="og:description" content="CKB的 Cell 模型和VM支持许多新的用例。然而，这并不意味着我们需要抛弃现有的。如今区块链中的一个常见用途是令牌发行者发布具有特殊目的/意义的新令牌。在以太坊中，我们称之为ERC20令牌，让我们看看我们如何在CKB中构建类似的概念。为了与ERC20区分，在CKB中的令牌我们称之为 user defined token , 简称UDT。 本文使用CKB v0.20.0版本来演示，具体来说，我在">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-09-09T07:56:58.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CKB脚本编程简介[3]: 自定义代币">
+<meta name="twitter:description" content="CKB的 Cell 模型和VM支持许多新的用例。然而，这并不意味着我们需要抛弃现有的。如今区块链中的一个常见用途是令牌发行者发布具有特殊目的/意义的新令牌。在以太坊中，我们称之为ERC20令牌，让我们看看我们如何在CKB中构建类似的概念。为了与ERC20区分，在CKB中的令牌我们称之为 user defined token , 简称UDT。 本文使用CKB v0.20.0版本来演示，具体来说，我在">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-134814659-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa3047c3116e917407db9258294149e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据模型"><span class="toc-text">数据模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#编写-UDT-脚本"><span class="toc-text">编写 UDT 脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#部署到CKB网络"><span class="toc-text">部署到CKB网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#灵活规则"><span class="toc-text">灵活规则</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-CKB脚本编程简介-3-自定义代币" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CKB脚本编程简介[3]: 自定义代币</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.09.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Orange</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Nervos/">Nervos</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>CKB的 Cell 模型和VM支持许多新的用例。然而，这并不意味着我们需要抛弃现有的。如今区块链中的一个常见用途是令牌发行者发布具有特殊目的/意义的新令牌。在以太坊中，我们称之为ERC20令牌，让我们看看我们如何在CKB中构建类似的概念。为了与ERC20区分，在CKB中的令牌我们称之为 <code>user defined token</code> , 简称UDT。</p>
+<p>本文使用CKB v0.20.0版本来演示，具体来说，我在每个项目中使用以下提交的版本:</p>
+<ul>
+<li><a href="https://github.com/nervosnetwork/ckb" target="_blank" rel="noopener">ckb</a>: 472252ac5333b2b19ea3ec50d54e68b627bf6ac5</li>
+<li><a href="https://github.com/nervosnetwork/ckb-duktape" target="_blank" rel="noopener">ckb-duktape</a>: 55849c20b43a212120e0df7ad5d64b2c70ea51ac</li>
+<li><a href="https://github.com/nervosnetwork/ckb-sdk-ruby" target="_blank" rel="noopener">ckb-sdk-ruby</a>: 1c2a3c3f925e47e421f9e3c07164ececf3b6b9f6</li>
+</ul>
+<h1 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h1><p>与以太坊为每个合约账户提供了独特的存储空间不同，CKB是在多个 Cell 之间传递数据。Cell 的 Lock Sript 和 Type Sript 会告知 Cell 属于哪个帐户，以及如何与 Cell 进行交互。其结果是，与ERC20将所有令牌用户的余额存储在ERC20合约的存储空间中不同，在CKB中，我们需要一种新的设计来存储UDT用户的余额。</p>
+<p>当然，我们可以构造一个特殊的 Cell 来保存所有UDT用户的余额。这个解决方案看起来很像以太坊的ERC20设计。但是出现了几个问题：</p>
+<ul>
+<li>令牌发行者必须提供存储空间以保存所有用户的余额。随着用户数量的增长，存储空间也将增长，这在CKB的经济模型中，不是一个高效的设计。</li>
+<li>考虑到更新CKB中的 Cell 实际上是在销毁旧 Cell 并重新生成新 Cell ，因此保存所有余额的单个 Cell 会产生瓶颈：需要更新UDT余额的每个操作都必须更新唯一的 Cell, 使用过程中将会产生冲突。</li>
+</ul>
+<p>虽然有一些解决方案可以缓解甚至解决上述问题，但我们开始质疑这里的基本设计：将所有UDT保存在一个地方真的有意义吗？一旦转账，UDT应该真的属于接受者，为什么余额仍然保持在中心化的地方？</p>
+<p>这引出了我们提出的设计：</p>
+<ol>
+<li>一个特殊的 Type Script 表示此 Cell 存储UDT。</li>
+<li>Cell 数据的前4个字节包含当前 Cell 中的UDT数量。</li>
+</ol>
+<p>这种设计有几个含义：</p>
+<ul>
+<li>UDT Cell 的存储成本始终是恒定的，与存储在 Cell 中的UDT数量无关。</li>
+<li>用户可以将 Cell 中的全部或部分UDT转账给其他人。</li>
+<li>实际上，可能有许多 Cell 包含相同数量的UDT。</li>
+<li>用于保护UDT的 Lock Script 与UDT本身分离。</li>
+</ul>
+<p>每个令牌用户将其UDT保存在自己的 Cell 中。他们负责为UDT提供存储空间，并确保他们自己的令牌是安全的。这样UDT就可以真正属于每个UDT用户。</p>
+<p>这里还有一个问题：如果令牌存储在属于每个用户的众多 Cell 中而不是统一存储，我们如何确保令牌确实由令牌发行者创建？如果有人自己伪造代币怎么办？在以太坊中，这可能是一个问题，但正如我们将在本文中看到的，CKB中的 Type Script 可以防止所有这些攻击，确保您的令牌是安全的。</p>
+<h1 id="编写-UDT-脚本"><a href="#编写-UDT-脚本" class="headerlink" title="编写 UDT 脚本"></a>编写 UDT 脚本</h1><p>鉴于上述设计，最小UDT Type Script 应该遵守以下规则：</p>
+<ul>
+<li>在UDT交易交易中，输出 Cell 中的UDT总和应等于输入 Cell 中UDT的总和。</li>
+<li>只有令牌发行者可以在初始令牌创建过程中生成新令牌。</li>
+</ul>
+<p>这可能听起来有点雄心勃勃，但我们会看到，通过 Type Script 和一些CKB独特的设计模式，一切都可以搞定：P</p>
+<p>为简单起见，我们将在纯JavaScript中编写UDT脚本，然而C的版本可能有助于节省 Cells ，但是功能将相同。</p>
+<p>首先，我们需要遍历所有输入 Cell 并收集UDT的总和：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/udt.js b/udt.js</span><br><span class="line">index e69de29..4a20bd0 100644</span><br><span class="line">--- a/udt.js</span><br><span class="line">+++ b/udt.js</span><br><span class="line">@@ -0,0 +1,17 @@</span><br><span class="line">+var input_index = 0;</span><br><span class="line">+var input_coins = 0;</span><br><span class="line">+var buffer = new ArrayBuffer(4);</span><br><span class="line">+var ret = CKB.CODE.INDEX_OUT_OF_BOUND;</span><br><span class="line">+</span><br><span class="line">+while (true) &#123;</span><br><span class="line">+  ret = CKB.raw_load_cell_data(buffer, 0, input_index, CKB.SOURCE.GROUP_INPUT);</span><br><span class="line">+  if (ret === CKB.CODE.INDEX_OUT_OF_BOUND) &#123;</span><br><span class="line">+    break;</span><br><span class="line">+  &#125;</span><br><span class="line">+  if (ret !== 4) &#123;</span><br><span class="line">+    throw &quot;Invalid input cell!&quot;;</span><br><span class="line">+  &#125;</span><br><span class="line">+  var view = new DataView(buffer);</span><br><span class="line">+  input_coins += view.getUint32(0, true);</span><br><span class="line">+  input_index += 1;</span><br><span class="line">+&#125;</span><br></pre></td></tr></table></figure>
+<p>正如前一篇文章中所解释的，CKB要求我们使用循环来迭代同一组中的所有输入 Cell 并获取数据。在C中我们将使用<code>ckb_load_cell_data</code>，它被包装到JS函数<code>CKB.raw_load_cell_data</code>中。正如ArrayBuffer所示，我们只对单元数据的前4个字节感兴趣，因为这4个字节将包含UDT的数量。</p>
+<p>注意，这里我们对<code>input_coins</code>执行一个简单的add操作，这非常危险。我们这样做只是为了简单起见。在生产环境中，您应该检查该值是否将保持在32位整数值中。如果需要，应使用更高精度的数字类型。</p>
+<p>同样，我们可以获取输出的UDT的总和并进行比较：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/udt.js b/udt.js</span><br><span class="line">index 4a20bd0..e02b993 100644</span><br><span class="line">--- a/udt.js</span><br><span class="line">+++ b/udt.js</span><br><span class="line">@@ -15,3 +15,23 @@ while (true) &#123;</span><br><span class="line">   input_coins += view.getUint32(0);</span><br><span class="line">   input_index += 1;</span><br><span class="line"> &#125;</span><br><span class="line">+</span><br><span class="line">+var output_index = 0;</span><br><span class="line">+var output_coins = 0;</span><br><span class="line">+</span><br><span class="line">+while (true) &#123;</span><br><span class="line">+  ret = CKB.raw_load_cell_data(buffer, 0, output_index, CKB.SOURCE.GROUP_OUTPUT);</span><br><span class="line">+  if (ret === CKB.CODE.INDEX_OUT_OF_BOUND) &#123;</span><br><span class="line">+    break;</span><br><span class="line">+  &#125;</span><br><span class="line">+  if (ret !== 4) &#123;</span><br><span class="line">+    throw &quot;Invalid output cell!&quot;;</span><br><span class="line">+  &#125;</span><br><span class="line">+  var view = new DataView(buffer);</span><br><span class="line">+  output_coins += view.getUint32(0, true);</span><br><span class="line">+  output_index += 1;</span><br><span class="line">+&#125;</span><br><span class="line">+</span><br><span class="line">+if (input_coins !== output_coins) &#123;</span><br><span class="line">+  throw &quot;Input coins do not equal output coins!&quot;;</span><br><span class="line">+&#125;</span><br></pre></td></tr></table></figure>
+<p>这几乎是验证第一条规则所需的全部内容：输出 Cell 中UDT的总和应等于输入 Cell 中UDT的总和。换句话说，现在使用这种 Type Script ，没有人能够伪造新的令牌。这不是很棒吗？</p>
+<p>但有一个问题：当我们说没有人能够伪造新的代币时，我们真的意味着没有人，包括代币发行人！这可不太好，我们需要添加一个例外，因此令牌发行者可以先创建令牌，但之后没有人能够这样做。有没有办法做到这一点？</p>
+<p>当然有！但答案就像一个谜语，所以请仔细阅读本段：Type Script 由2部分组成：表示实际代码的代码哈希，以及 Type Script 使用的参数。具有不同参数的2种 Type Script 将被视为2种不同 Type Script 。这里的技巧是允许令牌发行者创建一个具有新 Type Script 的 Cell ，没有人能够再次创建，所以如果我们在参数部分放置一些不能再包含的东西，那么问题就被解决了~</p>
+<p>现在想想这个问题：什么东西不能包含在区块链中两次？交易输入中的OutPoint！我们第一次将OutPoint作为交易输入包含在内时，引用的 Cell 将被消耗，如果有人稍后再次包含它，则会产生双花错误，这正是我们使用区块链的原因。</p>
+<p>我们现在有答案了！ CKB中最小UDT的 Type Script 完整验证流程如下：</p>
+<ol>
+<li>首先收集输入 Cell 中所有UDT的总和以及输出 Cell 中所有UDT的总和，如果它们相等，则 Type Script 将以成功状态退出。</li>
+<li>检查 Type Script 的第一个参数是否与当前交易中的第一个OutPoint匹配，如果它们匹配，则以成功状态退出。</li>
+<li>否则以失败状态退出。</li>
+</ol>
+<p>您可以看出：步骤1对应于正常的UDT交易，而步骤2对应于初始令牌创建过程。</p>
+<p>这就是我们所说的CKB独特的设计模式：通过使用输入OutPoint作为 Script 参数，我们可以创建一个无法再伪造的独特 Script：</p>
+<ol>
+<li>如果攻击者试图使用相同的参数，则 Script 将验证交易中的第一个输入OutPoint与参数不匹配，从而使交易无效;</li>
+<li>如果攻击者试图使用相同的参数并填充参数作为第一个输入OutPoint，它将创建一个双花错误，也会使交易无效;</li>
+<li>如果攻击者试图使用不同的参数，CKB将识别出不同的参数导致不同的 Type Script，从而生成不同的UDT。</li>
+</ol>
+<p>这种简单而强大的模式确保UDT保持安全，同时享受它们可以在许多不同单元之间自由传输的好处。据我们所知，这种模式在其他许多声称灵活或可编程的区块链中是不可能实现的。</p>
+<p>现在我们终于可以完成我们UDT脚本了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">diff --git a/contract.js b/contract.js</span><br><span class="line">deleted file mode 100644</span><br><span class="line">index e69de29..0000000</span><br><span class="line">diff --git a/udt.js b/udt.js</span><br><span class="line">index e02b993..cd443bf 100644</span><br><span class="line">--- a/udt.js</span><br><span class="line">+++ b/udt.js</span><br><span class="line">@@ -1,3 +1,7 @@</span><br><span class="line">+if (CKB.ARGV.length !== 1) &#123;</span><br><span class="line">+  throw &quot;Requires only one argument!&quot;;</span><br><span class="line">+&#125;</span><br><span class="line">+</span><br><span class="line"> var input_index = 0;</span><br><span class="line"> var input_coins = 0;</span><br><span class="line"> var buffer = new ArrayBuffer(4);</span><br><span class="line">@@ -33,5 +37,17 @@ while (true) &#123;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> if (input_coins !== output_coins) &#123;</span><br><span class="line">-  throw &quot;Input coins do not equal output coins!&quot;;</span><br><span class="line">+  if (!((input_index === 0) &amp;&amp; (output_index === 1))) &#123;</span><br><span class="line">+    throw &quot;Invalid token issuing mode!&quot;;</span><br><span class="line">+  &#125;</span><br><span class="line">+  var first_input = CKB.load_input(0, 0, CKB.SOURCE.INPUT);</span><br><span class="line">+  if (typeof first_input === &quot;number&quot;) &#123;</span><br><span class="line">+    throw &quot;Cannot fetch the first input&quot;;</span><br><span class="line">+  &#125;</span><br><span class="line">+  var hex_input = Array.prototype.map.call(</span><br><span class="line">+    new Uint8Array(first_input),</span><br><span class="line">+    function(x) &#123; return (&apos;00&apos; + x.toString(16)).slice(-2); &#125;).join(&apos;&apos;);</span><br><span class="line">+  if (CKB.ARGV[0] != hex_input) &#123;</span><br><span class="line">+    throw &quot;Invalid creation argument!&quot;;</span><br><span class="line">+  &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>就是这样，一共有53行代码或1372字节，我们就在CKB中完成了一个最小的UDT Type Script 。注意我在这里甚至没有使用压缩工具，使用任何不错的JS压缩工具，我们应该能够获得更紧凑的 Type Script 。当然了，这是一个可用于生产环境的 Type Script ，但它足以显示一个简单的 Type Script 足以处理CKB中的重要任务。</p>
+<h1 id="部署到CKB网络"><a href="#部署到CKB网络" class="headerlink" title="部署到CKB网络"></a>部署到CKB网络</h1><p>我不喜欢<a href="https://hacks.mozilla.org/2019/09/debugging-webassembly-outside-of-the-browser/" target="_blank" rel="noopener">其他一些组织</a> 只向你展示一个视频和一个充满挑战性的帖子其中隐藏了他们如何做到这一点以及伴随的问题。我相信如果没有真正的代码和使用它的步骤，它将是无趣的。以下是如何在CKB上使用上述UDT脚本：</p>
+<p>以防万一，这里是没有diff格式的完整UDT脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">$ cat udt.js</span><br><span class="line">if (CKB.ARGV.length !== 1) &#123;</span><br><span class="line">  throw &quot;Requires only one argument!&quot;;</span><br><span class="line">&#125;</span><br><span class="line">var input_index = 0;</span><br><span class="line">var input_coins = 0;</span><br><span class="line">var buffer = new ArrayBuffer(4);</span><br><span class="line">var ret = CKB.CODE.INDEX_OUT_OF_BOUND;</span><br><span class="line">while (true) &#123;</span><br><span class="line">  ret = CKB.raw_load_cell_data(buffer, 0, input_index, CKB.SOURCE.GROUP_INPUT);</span><br><span class="line">  if (ret === CKB.CODE.INDEX_OUT_OF_BOUND) &#123;</span><br><span class="line">    break;</span><br><span class="line">  &#125;</span><br><span class="line">  if (ret !== 4) &#123;</span><br><span class="line">    throw &quot;Invalid input cell!&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  var view = new DataView(buffer);</span><br><span class="line">  input_coins += view.getUint32(0, true);</span><br><span class="line">  input_index += 1;</span><br><span class="line">&#125;</span><br><span class="line">var output_index = 0;</span><br><span class="line">var output_coins = 0;</span><br><span class="line">while (true) &#123;</span><br><span class="line">  ret = CKB.raw_load_cell_data(buffer, 0, output_index, CKB.SOURCE.GROUP_OUTPUT);</span><br><span class="line">  if (ret === CKB.CODE.INDEX_OUT_OF_BOUND) &#123;</span><br><span class="line">    break;</span><br><span class="line">  &#125;</span><br><span class="line">  if (ret !== 4) &#123;</span><br><span class="line">    throw &quot;Invalid output cell!&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  var view = new DataView(buffer);</span><br><span class="line">  output_coins += view.getUint32(0, true);</span><br><span class="line">  output_index += 1;</span><br><span class="line">&#125;</span><br><span class="line">if (input_coins !== output_coins) &#123;</span><br><span class="line">  if (!((input_index === 0) &amp;&amp; (output_index === 1))) &#123;</span><br><span class="line">    throw &quot;Invalid token issuing mode!&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  var first_input = CKB.load_input(0, 0, CKB.SOURCE.INPUT);</span><br><span class="line">  if (typeof first_input === &quot;number&quot;) &#123;</span><br><span class="line">    throw &quot;Cannot fetch the first input&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">  var hex_input = Array.prototype.map.call(</span><br><span class="line">    new Uint8Array(first_input),</span><br><span class="line">    function(x) &#123; return (&apos;00&apos; + x.toString(16)).slice(-2); &#125;).join(&apos;&apos;);</span><br><span class="line">  if (CKB.ARGV[0] != hex_input) &#123;</span><br><span class="line">    throw &quot;Invalid creation argument!&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了能在CKB上运行JavaScript，让我们首先在CKB上部署duktape：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pry(main)&gt; data = File.read(&quot;../ckb-duktape/build/duktape&quot;)</span><br><span class="line">pry(main)&gt; duktape_tx_hash = wallet.send_capacity(wallet.address, CKB::Utils.byte_to_shannon(300000), CKB::Utils.bin_to_hex(duktape_data))</span><br><span class="line">pry(main)&gt; duktape_data_hash = CKB::Blake2b.hexdigest(duktape_data)</span><br><span class="line">pry(main)&gt; duktape_out_point = CKB::Types::CellDep.new(out_point: CKB::Types::OutPoint.new(tx_hash: duktape_tx_hash, index: 0))</span><br></pre></td></tr></table></figure>
+<p>首先，让我们创建一个包含1000000令牌的UDT：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">pry(main)&gt; tx = wallet.generate_tx(wallet.address, CKB::Utils.byte_to_shannon(20000))</span><br><span class="line">pry(main)&gt; tx.cell_deps.push(duktape_out_point.dup)</span><br><span class="line">pry(main)&gt; arg = CKB::Utils.bin_to_hex(CKB::Serializers::InputSerializer.new(tx.inputs[0]).serialize)</span><br><span class="line">pry(main)&gt; duktape_udt_script = CKB::Types::Script.new(code_hash: duktape_data_hash, args: [CKB::Utils.bin_to_hex(File.read(&quot;udt.js&quot;)), arg])</span><br><span class="line">pry(main)&gt; tx.outputs[0].type = duktape_udt_script</span><br><span class="line">pry(main)&gt; tx.outputs_data[0] = CKB::Utils.bin_to_hex([1000000].pack(&quot;L&lt;&quot;))</span><br><span class="line">pry(main)&gt; tx.witnesses[0].data.clear</span><br><span class="line">pry(main)&gt; signed_tx = tx.sign(wallet.key, api.compute_transaction_hash(tx))</span><br><span class="line">pry(main)&gt; root_udt_tx_hash = api.send_transaction(signed_tx)</span><br></pre></td></tr></table></figure>
+<p>如果我们再次尝试提交相同的交易，则双花将阻止我们伪造相同的令牌：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pry(main)&gt; api.send_transaction(signed_tx)</span><br><span class="line">CKB::RPCError: jsonrpc error: &#123;:code=&gt;-3, :message=&gt;&quot;UnresolvableTransaction(Dead(OutPoint(0x0b607e9599f23a8140d428bd24880e5079de1f0ee931618b2f84decf2600383601000000)))&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>无论我们如何尝试，我们都无法创建另一个想要伪造相同UDT令牌的 Cell 。</p>
+<p>现在我们可以尝试将UDT转移到另一个帐户。首先让我们尝试创建一个输出UDT比输入UDT更多的UDT交易：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pry(main)&gt; udt_out_point = CKB::Types::OutPoint.new(tx_hash: root_udt_tx_hash, index: 0)</span><br><span class="line">pry(main)&gt; tx = wallet.generate_tx(wallet2.address, CKB::Utils.byte_to_shannon(20000))</span><br><span class="line">pry(main)&gt; tx.cell_deps.push(duktape_out_point.dup)</span><br><span class="line">pry(main)&gt; tx.witnesses[0].data.clear</span><br><span class="line">pry(main)&gt; tx.witnesses.push(CKB::Types::Witness.new(data: []))</span><br><span class="line">pry(main)&gt; tx.outputs[0].type = duktape_udt_script</span><br><span class="line">pry(main)&gt; tx.outputs_data[0] = CKB::Utils.bin_to_hex([1000000].pack(&quot;L&lt;&quot;))</span><br><span class="line">pry(main)&gt; tx.inputs.push(CKB::Types::Input.new(previous_output: udt_out_point, since: &quot;0&quot;))</span><br><span class="line">pry(main)&gt; tx.outputs.push(tx.outputs[1].dup)</span><br><span class="line">pry(main)&gt; tx.outputs[2].capacity = CKB::Utils::byte_to_shannon(20000)</span><br><span class="line">pry(main)&gt; tx.outputs[2].type = duktape_udt_script</span><br><span class="line">pry(main)&gt; tx.outputs_data.push(CKB::Utils.bin_to_hex([1000000].pack(&quot;L&lt;&quot;)))</span><br><span class="line">pry(main)&gt; signed_tx = tx.sign(wallet.key, api.compute_transaction_hash(tx))</span><br><span class="line">pry(main)&gt; api.send_transaction(signed_tx)</span><br><span class="line">CKB::RPCError: jsonrpc error: &#123;:code=&gt;-3, :message=&gt;&quot;InvalidTx(ScriptFailure(ValidationFailure(-2)))&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里，我们尝试发送另一个用户1000000 UDT，同时为发送者本身保留1000000 UDT，当然这应该会触发错误，因为我们正在尝试伪造更多令牌。但稍作修改，我们可以证明，如果您遵守总和验证规则，UDT转移交易是有效的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pry(main)&gt; tx.outputs_data[0] = CKB::Utils.bin_to_hex([900000].pack(&quot;L&lt;&quot;))</span><br><span class="line">pry(main)&gt; tx.outputs_data[2] = CKB::Utils.bin_to_hex([100000].pack(&quot;L&lt;&quot;))</span><br><span class="line">pry(main)&gt; signed_tx = tx.sign(wallet.key, api.compute_transaction_hash(tx))</span><br><span class="line">pry(main)&gt; api.send_transaction(signed_tx)</span><br></pre></td></tr></table></figure>
+<h1 id="灵活规则"><a href="#灵活规则" class="headerlink" title="灵活规则"></a>灵活规则</h1><p>这里显示的UDT脚本仅作为示例，实际上，dapps可能更复杂并且需要更多功能。您还可以根据需要为UDT脚本添加更多功能，其中一些示例包括：</p>
+<ul>
+<li>这里我们严格确保输出UDT的总和等于输入UDT的总和，但在某些情况下，仅仅确保输出UDT的总和不超过输入UDT的总和就足够了。换句话说，当不需要时，用户可以选择为空间 烧毁 UDT。</li>
+<li>上述UDT脚本不允许在初始创建过程后发出更多令牌，但可能存在另一种类型的UDT，允许来自令牌发行者的增发。这当然也可以在CKB上运行，解决这个任务的实际方法，留在这里作为练习:)</li>
+<li>在这里，我们将脚本限制为仅在初始令牌创建过程中创建一个 Cell ，也可以创建多个单元格以在初始令牌创建过程中分散使用。</li>
+<li>虽然我们只在这里介绍ERC20，但ERC721也应该是完全可能的。</li>
+</ul>
+<p>请注意这些只是一些例子，使用CKB脚本的实际方法是没有边界的。我们非常高兴看到CKB dapp开发者创造出让我们感到惊讶的使用CKB脚本的有趣用法。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
