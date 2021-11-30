@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Nervos Script 初体验 | Orange&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Bitcoin,Nervos,">
+  
+
+  <meta name="description" content="【首杀达成】Nervos Script 初体验起因一直很好奇 Nervos 的 Script 到底是怎么运行的，也想了解CKB的 Risc-V 的神奇之处，想自己亲手体验下，但是目前还没找到这方面的文档，我们就打算把这实践当做一个CKB的高难度的副本，来做一次开荒抢首杀的体验～ 合约编写理论上，CKB底层是Risc-V，任何可以编译的语言都可以使用，这里我们使用了C来写一个简单的Demo： 123">
+<meta name="keywords" content="Bitcoin,Nervos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nervos Script 初体验">
+<meta property="og:url" content="http://orangem.io/2019/07/09/Nervos-Script-初体验/index.html">
+<meta property="og:site_name" content="Orange&#39;s Blog">
+<meta property="og:description" content="【首杀达成】Nervos Script 初体验起因一直很好奇 Nervos 的 Script 到底是怎么运行的，也想了解CKB的 Risc-V 的神奇之处，想自己亲手体验下，但是目前还没找到这方面的文档，我们就打算把这实践当做一个CKB的高难度的副本，来做一次开荒抢首杀的体验～ 合约编写理论上，CKB底层是Risc-V，任何可以编译的语言都可以使用，这里我们使用了C来写一个简单的Demo： 123">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.loli.net/2019/07/09/5d240eb09d60741721.jpg">
+<meta property="og:updated_time" content="2019-07-09T12:38:00.245Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nervos Script 初体验">
+<meta name="twitter:description" content="【首杀达成】Nervos Script 初体验起因一直很好奇 Nervos 的 Script 到底是怎么运行的，也想了解CKB的 Risc-V 的神奇之处，想自己亲手体验下，但是目前还没找到这方面的文档，我们就打算把这实践当做一个CKB的高难度的副本，来做一次开荒抢首杀的体验～ 合约编写理论上，CKB底层是Risc-V，任何可以编译的语言都可以使用，这里我们使用了C来写一个简单的Demo： 123">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/09/5d240eb09d60741721.jpg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-134814659-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa3047c3116e917407db9258294149e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#【首杀达成】Nervos-Script-初体验"><span class="toc-text">【首杀达成】Nervos Script 初体验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#起因"><span class="toc-text">起因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合约编写"><span class="toc-text">合约编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合约部署"><span class="toc-text">合约部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合约调用"><span class="toc-text">合约调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合约验证"><span class="toc-text">合约验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#彩蛋环节"><span class="toc-text">彩蛋环节</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Nervos-Script-初体验" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Nervos Script 初体验</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.07.09</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Orange</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Nervos/">Nervos</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="【首杀达成】Nervos-Script-初体验"><a href="#【首杀达成】Nervos-Script-初体验" class="headerlink" title="【首杀达成】Nervos Script 初体验"></a>【首杀达成】Nervos Script 初体验</h1><h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>一直很好奇 Nervos 的 Script 到底是怎么运行的，也想了解CKB的 Risc-V 的神奇之处，想自己亲手体验下，但是目前还没找到这方面的文档，我们就打算把这实践当做一个CKB的高难度的副本，来做一次开荒抢首杀的体验～</p>
+<h2 id="合约编写"><a href="#合约编写" class="headerlink" title="合约编写"></a>合约编写</h2><p>理论上，CKB底层是Risc-V，任何可以编译的语言都可以使用，这里我们使用了C来写一个简单的Demo：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (argc == <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-2</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (argc == <span class="number">5</span> ) &#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">-3</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单描述下，合约接受参数，如果参数数量 = 3 ，就返回-2，如果参数数量等于5，就返回-3，其他任意参数都可以返回0.</p>
+<p>合约使用了<code>riscv-tools</code>编译，编译之后为6.1KB，已知1CKB = 1Bytes…所以我们大概需要6100CKB 来存储这个合约…. (貌似有点大….)</p>
+<p><em>本来挖到了2个块一共3800CKB..然后发现钱不够…也再挖不出了…就默默寻求场外帮助了…丹妞赞助了1100WCKB…(如果是主网Token多好…)</em></p>
+<h2 id="合约部署"><a href="#合约部署" class="headerlink" title="合约部署"></a>合约部署</h2><p><em>有钱了做事情就有底气了…(我要打10个！)</em></p>
+<p>接下来就需要把编译好的合约部署到网络里。首先读取这个二进制文件，转成16进制，然后构造一笔交易，塞到Output 的 Data里面去，效果如下：<br><img src="https://i.loli.net/2019/07/09/5d240eb09d60741721.jpg" alt></p>
+<p><a href="https://explorer.nervos.org/transaction/0x2928ab517396220e3c8336588bb70a445e4fc271975a3a3cf59309253e05de78" target="_blank" rel="noopener">交易TX</a></p>
+<p><em>这笔交易我们构造了一个1100W的Cell空间，有钱就是NB！</em></p>
+<h2 id="合约调用"><a href="#合约调用" class="headerlink" title="合约调用"></a>合约调用</h2><p>接下来我们构造了一笔交易，将这个 Cell 空间 作为Input，分成了5个Output，也就是创建了5个新的Cell，这5个Cell的 <code>LockScript</code> 的<code>Codehash</code>都引用了上面部署的Data的<code>Hash</code>, 调用了上面Data的代码;<code>args</code>分别给了0-4个参数，来校验能不能正确解锁。</p>
+<p><a href="https://explorer.nervos.org/transaction/0x395fc85dc84950ee394447418405e33413e3c0700e12d6e67c98452e797b0a3f" target="_blank" rel="noopener">交易TX</a></p>
+<blockquote>
+<p>知识点：VM在尝试解锁的时候，会默认帮我带一个参数进去，所以这5个Cell的参数个数分别是：1-5，所以我应该是可以解锁1，2，4个Cell的…另外….3个Cell 任何人都能解锁…他不会验证私钥的…</p>
+</blockquote>
+<h2 id="合约验证"><a href="#合约验证" class="headerlink" title="合约验证"></a>合约验证</h2><p>现在我们尝试解锁第1个Cell，把他们作为Input!</p>
+<p>当当当～成功了！入链了！</p>
+<p><a href="https://explorer.nervos.org/transaction/0x6a39d410a1eb50a5e6fcf2c3722c2c652df6271860545bc1b9ecc95cae0e4c76" target="_blank" rel="noopener">交易TX</a></p>
+<p>接着我们尝试解锁第3个Cell～</p>
+<p>这时候报错了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: &#123;&quot;code&quot;:-3,&quot;message&quot;:&quot;InvalidTx(ScriptFailure(ValidationFailure(-3)))&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>说明解锁失败～我们的代码生效了！</p>
+<p>到此，合约调用和验证的完整流程结束撒花～～</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>最后附上吐槽和总结…</p>
+<p>这次的首杀过程中，Nervos的VM的灵活性带给我们无限的可能，我们可以更加灵活的创造，不受VM的限制。</p>
+<p>但是…这种灵活性会给安全性带来一系列的挑战，所以开发者需要更谨慎的开发，避免出现风险。</p>
+<h2 id="彩蛋环节"><a href="#彩蛋环节" class="headerlink" title="彩蛋环节"></a>彩蛋环节</h2><p>我们留了2个 Cell 未解锁，如果你能成功解锁并留言TX的话，我个人赠送1个木猿～一共2枚～</p>
+<p>一起来玩吧～</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

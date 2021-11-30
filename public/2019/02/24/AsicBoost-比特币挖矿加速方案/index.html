@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-posts">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>AsicBoost-比特币挖矿加速方案 | Orange&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Bitcoin,Asicboost,">
+  
+
+  <meta name="description" content="AsicBoost - 比特币挖矿加速方案2018年做了很多的区块链方面的研究，包括比特币Self-Mined, Asicboost,POS算法的作弊逻辑。虽然谈不上是个大牛，也算是小有见解。今年自己慢慢整理出来，也算是给自己成长的一个交代。 1.介绍AsicBoost 是一种提升大约比特币 20% 挖矿效率的优化方案。应为是纯算法优化因此适用于所有的挖矿硬件和芯片。AsicBoost 方案包括了">
+<meta name="keywords" content="Bitcoin,Asicboost">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AsicBoost-比特币挖矿加速方案">
+<meta property="og:url" content="http://orangem.io/2019/02/24/AsicBoost-比特币挖矿加速方案/index.html">
+<meta property="og:site_name" content="Orange&#39;s Blog">
+<meta property="og:description" content="AsicBoost - 比特币挖矿加速方案2018年做了很多的区块链方面的研究，包括比特币Self-Mined, Asicboost,POS算法的作弊逻辑。虽然谈不上是个大牛，也算是小有见解。今年自己慢慢整理出来，也算是给自己成长的一个交代。 1.介绍AsicBoost 是一种提升大约比特币 20% 挖矿效率的优化方案。应为是纯算法优化因此适用于所有的挖矿硬件和芯片。AsicBoost 方案包括了">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://i.loli.net/2019/02/24/5c71856803713.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/24/5c7185669900c.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/24/5c718567c4a75.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/24/5c718567c54d9.png">
+<meta property="og:image" content="https://i.loli.net/2019/02/24/5c718566f39bf.png">
+<meta property="og:updated_time" content="2019-02-23T17:42:51.782Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AsicBoost-比特币挖矿加速方案">
+<meta name="twitter:description" content="AsicBoost - 比特币挖矿加速方案2018年做了很多的区块链方面的研究，包括比特币Self-Mined, Asicboost,POS算法的作弊逻辑。虽然谈不上是个大牛，也算是小有见解。今年自己慢慢整理出来，也算是给自己成长的一个交代。 1.介绍AsicBoost 是一种提升大约比特币 20% 挖矿效率的优化方案。应为是纯算法优化因此适用于所有的挖矿硬件和芯片。AsicBoost 方案包括了">
+<meta name="twitter:image" content="https://i.loli.net/2019/02/24/5c71856803713.png">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-134814659-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa3047c3116e917407db9258294149e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AsicBoost-比特币挖矿加速方案"><span class="toc-text">AsicBoost - 比特币挖矿加速方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-介绍"><span class="toc-text">1.介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SHA256介绍"><span class="toc-text">2.SHA256介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-比特币挖矿算法"><span class="toc-text">3.比特币挖矿算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1满足什么条件算是成功？"><span class="toc-text">3.1满足什么条件算是成功？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2原始数据有什么内容？"><span class="toc-text">3.2原始数据有什么内容？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3矿池为矿工提供的挖矿服务"><span class="toc-text">3.3矿池为矿工提供的挖矿服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4矿工需要做什么？"><span class="toc-text">3.4矿工需要做什么？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-Asicboost优化"><span class="toc-text">4.Asicboost优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-总结"><span class="toc-text">5.总结</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="posts-AsicBoost-比特币挖矿加速方案" class="article article-type-posts" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">AsicBoost-比特币挖矿加速方案</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.02.24</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Orange</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Bitcoin/">Bitcoin</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h2 id="AsicBoost-比特币挖矿加速方案"><a href="#AsicBoost-比特币挖矿加速方案" class="headerlink" title="AsicBoost - 比特币挖矿加速方案"></a>AsicBoost - 比特币挖矿加速方案</h2><p>2018年做了很多的区块链方面的研究，包括比特币Self-Mined, Asicboost,POS算法的作弊逻辑。虽然谈不上是个大牛，也算是小有见解。今年自己慢慢整理出来，也算是给自己成长的一个交代。</p>
+<h3 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h3><p>AsicBoost 是一种提升大约比特币 20% 挖矿效率的优化方案。应为是纯算法优化因此适用于所有的挖矿硬件和芯片。AsicBoost 方案包括了2部分，一部分是对SHA 256的算法优化，一部分是对于挖矿软件的预计算部分的处理优化。</p>
+<p>在详细的了解Asicboost之前，我们先来了解下什么是SHA256，以及比特币的挖矿处理逻辑。</p>
+<h3 id="2-SHA256介绍"><a href="#2-SHA256介绍" class="headerlink" title="2.SHA256介绍"></a>2.SHA256介绍</h3><p>SHA256, 哈希算法，又称为散列函数，是将任意长度的二进制值映射为较短的固定长度的二进制值，这个小的二进制值称为哈希值。</p>
+<p>为了方便理解，大家可以想一下较熟悉的WinRAR压缩软件，无轮是只有一个原始文件，还是好几个原始文件，都可以压缩成一个RAR文件。当任何一个原始文件有任何变动时，重新压缩生成的这个RAR文件就会发生变动，而不再是之前的文件。</p>
+<p>而哈希算法有点类似，但其处理的对象不是文件，而是字串。将任意长度原始字串“压缩”成一个字串即Hash字串。原始字串任何一点点微小的变化都会引起Hash的变化。与RAR的不同之处是，通过Hash结果是不可以“解压”还原成原始字串的。</p>
+<p>哈希算法有很多很多种，典型的哈希算法有MD2、MD4、MD5 、 SHA-1、SHA-2、SHA-256、SHA-512、SHA-3、RIPEMD-160和SCRYPT算法（莱特币和狗狗币使用）等等。在比特币中大量采用的是SHA256算法，在从公钥生成币地址时还另外用过RIPEMD160算法，其它地方用到Hash时一般就是用SHA256算法。其特点如下图所示将任何字串转变生成256位随机的0或1。<br><img src="https://i.loli.net/2019/02/24/5c71856803713.png" alt="image"></p>
+<h3 id="3-比特币挖矿算法"><a href="#3-比特币挖矿算法" class="headerlink" title="3.比特币挖矿算法"></a>3.比特币挖矿算法</h3><p>挖矿到底在做什么是较好理解的，就是通过不断地改变原始数据，来不断地求算SHA256算法下的Hash值，当满足一定条件时成功。 </p>
+<h5 id="3-1满足什么条件算是成功？"><a href="#3-1满足什么条件算是成功？" class="headerlink" title="3.1满足什么条件算是成功？"></a>3.1满足什么条件算是成功？</h5><p>看一个最近的出块实例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Height     : 564,270</span><br><span class="line">Block Hash : 0000000000000000000674a05c77c2911ad42c94bc4170ac90f0c89ca8c92734</span><br></pre></td></tr></table></figure></p>
+<p>前20个都是零，另外后面的数也要小于一定的数，那么才满足条件。而这些哈希值结果是随机的，能做的这么规律，只能是不断地更换原文内容不断地进行尝试，在大量的随机结果中来筛选满足出块条件的。难度并非固定的，根据全网算力挖块的情况，每挖出来2016个区块（约两周时间2016/6/24=14days）就调整一次难度。若挖完2016区块所用的时间短于两周，那就提高难度；而若长于两周，那就降低难度。</p>
+<h5 id="3-2原始数据有什么内容？"><a href="#3-2原始数据有什么内容？" class="headerlink" title="3.2原始数据有什么内容？"></a>3.2原始数据有什么内容？</h5><p>并非对整个区块内容取Hash值，而是仅仅只对80字节大小的区块头，进行SHA256算法。这80字节具体分为六个部分。</p>
+<p><img src="https://i.loli.net/2019/02/24/5c7185669900c.png" alt="image"></p>
+<p>1)版本号Version：4字节，进行投票时变动</p>
+<p>按目前的BIP9升级规范，版本号是用于投票区块自己支持的分叉升级方案，如若支持SW可版本号为0x20000002具体可看下面这个文章：</p>
+<p><a href="https://www.8btc.com/article/359000" target="_blank" rel="noopener">谈谈软分叉升级规范BIP8-后矿工时代的软分叉方式</a></p>
+<p>2)上一个区块Hash：32字节，有新区块时变动</p>
+<p>这是将区块串成区块链的关键，表示这个区块是在哪个区块的基础之上进行挖矿而挖到的。当比特全网出现合法的新区块后，要及时替换上新区块的Hash，否则就算挖出来也可能被孤立。</p>
+<p>3)交易树根MerkleRoot：32字节，交易变时变动</p>
+<p>本应该是所有交易都进行Hash的，但是计算量太大，于是将所有交易用Merkle Root Hash的方法，将所有交易Hash合并成一个32字节的Hash数据。它能代表所有交易，任何交易的任何细小变动都会引起MerkleRoot的变动。这个后面还有更多讨论和图。</p>
+<p>4)时间戳TimeStamp：4字节，当前时间变动</p>
+<p>最好写当前时间，但不是很严格，允许有一定的时间偏差，但不能偏差太大，偏差太大会被区块孤立的。因为不严格，有时下个区块比它的上个区块的时间戳时间还早，这是有可能的，但真实的诞生时间当然是先有上个区块，才会有下个区块。</p>
+<p>5)当前难度值Bits：4字节，每两周左右变一次</p>
+<p>由全网算力决定，每2016个区块重新调整，调整算法固定，就是说在调整时，大家都可以根据历史数据自己计算出来，而不是由谁指定。怎么用四个字节表示难度呢？有点类似于天文数字的科学计数法，第一个字节V1代表右移的位数，用剩下三字节V3表示具体的有效数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F(nBits)=V3 * 2^(8*(V1-3) )</span><br></pre></td></tr></table></figure></p>
+<p>6)随机数Nonce：4字节，随时可变</p>
+<p>这个是给矿工挖矿时自己调整用的，以便能找到合适的值让区块头的Hash结果能满足难度需求。这个参数估计中本聪有点失误，设计小了，仅仅4字节，CPU挖矿时代够用，但显卡GPU时代，就有点不够用了，几秒的时间就能全部的Nonce都全试了一次了。不过可以微调上面的时间戳TimeStamp，调一次就可以再挖几秒，勉强够用。然而进入专业矿机矿池时代，Nonce就远远不够用了，由于各字段一般都有较明确有固定含义不能轻易动，于是转向32字节的交易树根MerkleRoot。</p>
+<h5 id="3-3矿池为矿工提供的挖矿服务"><a href="#3-3矿池为矿工提供的挖矿服务" class="headerlink" title="3.3矿池为矿工提供的挖矿服务"></a>3.3矿池为矿工提供的挖矿服务</h5><p>收集比特交易是矿池上完成的，矿池需要运行全节点，而矿工却不需要。如下图蓝线指示，矿池会由待打包的交易生成那些黑点，然后时常发给矿工。另外构造一个基本coinbase交易，也发给矿工。理论上矿池给矿工的coinbase交易内容能维持较长时间不变动。但SW隔离严证实施后，每当有交易顺序或交易内容调整时，都需要变动coinbase。还有就是矿池要提供除了MerklerRoot和Nonce之外的区块头数据。</p>
+<h5 id="3-4矿工需要做什么？"><a href="#3-4矿工需要做什么？" class="headerlink" title="3.4矿工需要做什么？"></a>3.4矿工需要做什么？</h5><p>矿工收到从矿池发过来的信息后:</p>
+<p>第一步是计算红点，完善coinbase交易一般是加个随机数即可完善好，然后对coinbase交易进行SHA256的Hash计算。</p>
+<p>第二步是计算绿点，将coinbase的结果，再依次和下图中的黑点逐一合并得出上一层的Hash，最终得到最上面的交易树根MerklerRoot。</p>
+<p>第三步是计算区块头Hash，有了MerklerRoot后，结合矿池提供的区块头数据，再加个随机变动的Nonce就可以形成完整区块头，用其计算Hash。当Nonce完全遍历一遍和足够变动时间戳后，正常一般是回到第一步更换一个随机数来重新完善coinbase交易，进而第二步中MerklerRoot值最终将不一样。而ASICBoost可能是调换交易顺序而更新MerklerRoot。</p>
+<p>第四步是提交成功的Share计算结果，并非要满足全网的难度般，只要满足矿池设的挖矿难度就可以提交了，一般提交给矿池自己的矿工ID和任务ID，coinbase的随机数和区块头的时间戳TimeStamp及随机数Nonce。</p>
+<p>矿池在收到后及时进行验证，若满足则记一份功劳贡献，同时看看是否满足全网的难度要求，若满足则广播发布出去，从而挖到新块，且按记录的功劳Share数量分配给各矿工应有的币量。</p>
+<p><img src="https://i.loli.net/2019/02/24/5c718567c4a75.png" alt="image"></p>
+<h3 id="4-Asicboost优化"><a href="#4-Asicboost优化" class="headerlink" title="4.Asicboost优化"></a>4.Asicboost优化</h3><p>根据目前了解，简单说，其就是利用了SHA256算法的内部计算规则，先64字节一组，然后再4个字节一个组。而ASICBoost专利，应该就是用交换交易位置的方式，不必修改coinbase，来快速得到很多相同的末尾4字节的MerklerRoot，从而硬件可加速优化计算区块头两次SHA256的哈希值，即SHA256( SHA256( BlockHeader ))的速度。</p>
+<p><img src="https://i.loli.net/2019/02/24/5c718567c54d9.png" alt="image"></p>
+<p>在计算这个区块头的SHA256时，我们需要先用固定的填充位补齐为128字节，之后SHA256会64字节一组去处理，可以简单认为是 F ( F（SHA256规范的初始值，前半部分）, 后半部分）。F又需要对这64字节先按4字节一组拆分，进行64轮计算。结合上图，我们不难发现，Merkle Root的前28个字节和后4个字节被分开了，在修改Nonce过程中，前半部分是不变的，而后半部分的前12个字节也是不变的。因此目前几乎所有的芯片都已经做了这两个优化，即前半部分的处理结果（getwork中的midstate）和后半部分的前3轮结果（midstate3）。<strong>这样的优化效果是 (61/64+1)/3 = 65.1%，提升了34.9%。</strong></p>
+<p>Merkle Root在图上显得很尴尬，如果中本聪设计的时候Version变成第三个字段该多好（就是说把Version放在MerkleRoot的后面）。这样后半段的前4个字节就固定了，如果我们对于时间戳要求不那么高，前12个字节可以完全固定下来了。对于芯片来说可以节省更多的计算，也可以去掉对应的一些电路。ASICBoost将这个脑洞往实践推了一步：我们去构建一组后4个字节相同的Merkle Root。</p>
+<p>这样问题就变成能不能高效找到后缀一样的Merkle Root？效率提升有多大？ASICBoost的白皮书提到有很高效的方法，并且给出了一张表：</p>
+<p><img src="https://i.loli.net/2019/02/24/5c718566f39bf.png" alt="image"></p>
+<p>ASICBoost白皮书的Merkle Root碰撞数量对效率影响ASICBoost白皮书的Merkle Root碰撞数量对效率影响。（表格的意思是若找到五个相同后4字节的Merkle Root那么效率能提升20%）<br>这里问题的本质是一个32位的哈希碰撞，根据“生日悖论”，找到一组碰撞需要的尝试次数其实并不多，我们只需要77000次就有50%概率找到两个后缀相同的Merkle Root。当然对于一台矿机来说，仅仅2个是远远不够的，如果是矿场的话应该需要配备专门的硬件去产生足够的任务。尝试新的Merkle Root通常有两种方法：</p>
+<p>方法一：修改Coinbase交易。这个方法似乎最简单而且隐蔽，但是白皮书认为不够高效；</p>
+<p>方法二：交换任意交易的顺序。白皮书只举例了方法2，其他方法并未给出。注意无论是1和2，新的Merkle Root并不需要从下而上全部计算。</p>
+<h4 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h4><p>看到这里，你大概就了解了什么是AsicBoost, 是简化了比特币挖矿SHA256的计算量，来提高效率的。<br>关于Asicboost在专利争议上还有一段故事，你可以搜索阅读下Asicboost 专利的爱恨情仇。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-posts">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

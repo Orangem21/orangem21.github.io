@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>CKB脚本编程简介[1]: 验证模型 | Orange&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Bitcoin,Nervos,">
+  
+
+  <meta name="description" content="截至目前，CKB中的Cell验证模型或多或少已经趋于稳定，因此我将在这里开始写一系列文章来介绍CKB脚本编程。我的目标是补充在阅读白皮书后编写CKB脚本所需的所有缺失的细节实现，这样您就可以开始探索CKB呈现的这个美丽的仙境。 您可能会注意到我将在CKB上运行的代码称为脚本，而不是智能合约。这是因为智能合约对我来说是一个令人困惑的术语，我在这里想用另一个词来表示CKB独特的可编程性。CKB中的脚本">
+<meta name="keywords" content="Bitcoin,Nervos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CKB脚本编程简介[1]: 验证模型">
+<meta property="og:url" content="http://orangem.io/2019/07/07/CKB脚本编程简介-1-验证模型/index.html">
+<meta property="og:site_name" content="Orange&#39;s Blog">
+<meta property="og:description" content="截至目前，CKB中的Cell验证模型或多或少已经趋于稳定，因此我将在这里开始写一系列文章来介绍CKB脚本编程。我的目标是补充在阅读白皮书后编写CKB脚本所需的所有缺失的细节实现，这样您就可以开始探索CKB呈现的这个美丽的仙境。 您可能会注意到我将在CKB上运行的代码称为脚本，而不是智能合约。这是因为智能合约对我来说是一个令人困惑的术语，我在这里想用另一个词来表示CKB独特的可编程性。CKB中的脚本">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://orangem.io/images/tx.svg">
+<meta property="og:image" content="http://orangem.io/images/tx.svg">
+<meta property="og:updated_time" content="2019-09-09T03:58:43.295Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CKB脚本编程简介[1]: 验证模型">
+<meta name="twitter:description" content="截至目前，CKB中的Cell验证模型或多或少已经趋于稳定，因此我将在这里开始写一系列文章来介绍CKB脚本编程。我的目标是补充在阅读白皮书后编写CKB脚本所需的所有缺失的细节实现，这样您就可以开始探索CKB呈现的这个美丽的仙境。 您可能会注意到我将在CKB上运行的代码称为脚本，而不是智能合约。这是因为智能合约对我来说是一个令人困惑的术语，我在这里想用另一个词来表示CKB独特的可编程性。CKB中的脚本">
+<meta name="twitter:image" content="http://orangem.io/images/tx.svg">
+
+  
+
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-134814659-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa3047c3116e917407db9258294149e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概述"><span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type-脚本"><span class="toc-text">type 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lock-脚本"><span class="toc-text">lock 脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行模型"><span class="toc-text">运行模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#回到例子"><span class="toc-text">回到例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则"><span class="toc-text">规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下期预告"><span class="toc-text">下期预告</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-CKB脚本编程简介-1-验证模型" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">CKB脚本编程简介[1]: 验证模型</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.07.07</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Orange</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Nervos/">Nervos</a>
+  </span>
+
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>截至目前，CKB中的Cell验证模型或多或少已经趋于稳定，因此我将在这里开始写一系列文章来介绍CKB脚本编程。我的目标是补充在阅读白皮书后编写CKB脚本所需的所有缺失的细节实现，这样您就可以开始探索CKB呈现的这个美丽的仙境。</p>
+<p>您可能会注意到我将在CKB上运行的代码称为<code>脚本</code>，而不是<code>智能合约</code>。这是因为智能合约对我来说是一个令人困惑的术语，我在这里想用另一个词来表示CKB独特的可编程性。CKB中的脚本不一定只是我们在脚本语言中看到的脚本，例如Ruby，JS，它实际上是指在CKB VM上运行的RISC-V格式二进制文件。</p>
+<p>这第一篇文章将专门介绍CKB v0.14.0中引入的<a href="https://github.com/nervosnetwork/ckb/pull/913" target="_blank" rel="noopener">全新验证模型</a>。这可能听起来很无聊，但我保证这是最后一篇没有实际例子的帖子 :P</p>
+<p>请注意，尽管我认为CKB的编程模型现在非常稳定，但目前仍然在进行开发，因此可能会有变化。我会尽力确保这篇文章更新，但如果有什么让你感到困惑的话，这篇文章现在正在描述CKB的这次<a href="https://github.com/nervosnetwork/ckb/commit/a02c675c50c5969a588fa7f6356f08861d8f5f92" target="_blank" rel="noopener">提交</a>。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>下面一张图片说明了CKB的真实交易过程：</p>
+<p><img src="/images/tx.svg" alt="Transaction Example"></p>
+<p>这张图中有很多内容，我们将在稍后的文章中再次回到此图。今天，我们将只关注单元数据结构中的2个实体：<code>lock</code>和<code>type</code>。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="class"><span class="keyword">struct</span> <span class="title">CellOutput</span></span> &#123;</span><br><span class="line">    <span class="keyword">pub</span> capacity: Capacity,</span><br><span class="line">    <span class="keyword">pub</span> data: Bytes,</span><br><span class="line">    <span class="keyword">pub</span> lock: Script,</span><br><span class="line">    <span class="meta">#[serde(rename = <span class="meta-string">"type"</span>)]</span></span><br><span class="line">    <span class="keyword">pub</span> type_: <span class="built_in">Option</span>&lt;Script&gt;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从数据结构中我们可以看到<code>lock</code>和<code>type</code>共享相同的结构，稍后我们可以证明它们也是在同一个环境中执行的，它们之间的差异只是在几个小细节中：</p>
+<ul>
+<li><code>lock</code> 是必须的, while <code>type</code> 是可选项</li>
+<li>通常, 他们用于不同的实例</li>
+</ul>
+<p>我们首先从<code>type</code>脚本开始。</p>
+<h2 id="type-脚本"><a href="#type-脚本" class="headerlink" title="type 脚本"></a>type 脚本</h2><p>请注意，注意这里的名字只是一个幸运的意外，它与心爱的<a href="https://www.typescriptlang.org/" target="_blank" rel="noopener">编程语言</a>无关.</p>
+<p>如果你考虑一下，CKB（或大多数基于UTXO的区块链）上的交易只会将一组Cell（或UTXO）转换为另一组Cell。有趣的是，这里的实际转换过程。这就是我们开始设计CKB验证模型的地方：我们如何构建模型以更好地验证Cell 转换？</p>
+<p>这就是<code>type</code>脚本的用武之地：<code>type</code>脚本用于验证 Cell 转换阶段的某些规则。这里的一些例子包括：</p>
+<ul>
+<li>验证UDT（用户定义的Token）余额以确保不会无效地发出新Token。</li>
+</ul>
+<h2 id="lock-脚本"><a href="#lock-脚本" class="headerlink" title="lock 脚本"></a>lock 脚本</h2><h2 id="运行模型"><a href="#运行模型" class="headerlink" title="运行模型"></a>运行模型</h2><p>现在让我们看看是什么时候执行 lock 和 type 脚本的。</p>
+<h2 id="回到例子"><a href="#回到例子" class="headerlink" title="回到例子"></a>回到例子</h2><p>这是我们之前看到的交易：</p>
+<p><img src="/images/tx.svg" alt="Transaction Example"></p>
+<p>在图中，执行流程如下:</p>
+<ol>
+<li><code>Lock Script 1</code> 执行一次。 </li>
+<li><code>Lock Script 2</code> 执行一次。 </li>
+<li><code>Type Script 1</code> 执行一次。 </li>
+<li><code>Type Script 2</code> 执行一次。</li>
+</ol>
+<p>在后面的文章中，我们可以看到 lock 和 type 脚本都在相同的环境中执行，并且都可以访问整个交易。如果任何一个脚本失败，整个交易就会失败。只有当所有脚本都成功时，交易才被认为是有效的。</p>
+<p>有几点值得一提:</p>
+<blockquote>
+<p>尽管有 2 个带有<code>Lock Script 1</code>的 input cell，但它只执行一次，由实际的 lock 脚本来定位具有相同 lock 脚本的所有 input cell，并验证两个签名。</p>
+</blockquote>
+<blockquote>
+<p>在这个交易中只执行 input cell 中的 lock 脚本，例如：这里不执行<code>Lock Script 3</code>。</p>
+</blockquote>
+<blockquote>
+<p>即使 input cell 和 output cell 都包含<code>Type Script 1</code>，也只执行一次。</p>
+</blockquote>
+<blockquote>
+<p>在 input 和 output cell 中都会执行 type 脚本，其中包括<code>Type Script 1</code>和<code>Type Script 2</code>。</p>
+</blockquote>
+<blockquote>
+<p>有些 cell 没有 type 脚本，在本例中我们只是省略了执行。</p>
+</blockquote>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><p>现在我们总结一下规则:</p>
+<blockquote>
+<p>在 input cell 中的 lock 脚本会被收集和解压，每个单独的 lock 脚本会被执行一次，并且只执行一次。</p>
+</blockquote>
+<blockquote>
+<p>input 和 output cell 中的 type 脚本(如果存在的话)会被收集在一起并解码，每个单独的 type 脚本都会被执行一次，并且只执行一次。</p>
+</blockquote>
+<blockquote>
+<p>任何脚本失败，则整个交易验证失败。</p>
+</blockquote>
+<h2 id="下期预告"><a href="#下期预告" class="headerlink" title="下期预告"></a>下期预告</h2><p>现在已经介绍了 cell 模型，我们将在下一篇文章中研究如何实际编写 CKB VM 脚本。将验证默认的 secp256k1 lock 脚本，来演示 CKB VM 脚本的使用周期。</p>
+
+    
+  </div>
+
+</article>
+
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/category/" rel="noopener noreferrer" target="_self">
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/tag/" rel="noopener noreferrer" target="_self">
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/about/" rel="noopener noreferrer" target="_self">
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a class="CIRCLE" href="/search/" rel="noopener noreferrer" target="_self">
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
